@@ -1,30 +1,22 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-
-import { registerLocaleData } from "@angular/common";
-import { HttpClientModule } from "@angular/common/http";
+import {NgModule} from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {registerLocaleData} from "@angular/common";
+import {HttpClientModule} from "@angular/common/http";
 import localeFr from "@angular/common/locales/fr";
-import { FormsModule } from "@angular/forms";
-import { ReplaceComma } from "../shared/replace-comma.pipe";
-import { StarRatingComponent } from "../shared/star-rating/star-rating.component";
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { HotelListComponent } from "./hotel-list/hotel-list.component";
-import { HomeComponent } from './home/home.component';
-import { HotelDetailComponent } from './hotel-list/hotel-detail/hotel-detail.component';
+import {FormsModule} from "@angular/forms";
 import {RouterModule} from "@angular/router";
-import {hotelDetailGuard} from "./hotel-list/hotel-detail.guard";
+
+import {HotelModule} from './hotels/hotel.module';
+import {AppRoutingModule} from './app-routing.module';
+import {AppComponent} from './app.component';
+import {HomeComponent} from './home/home.component';
 
 registerLocaleData(localeFr,'fr');
 
 @NgModule({
   declarations: [
     AppComponent,
-    HotelListComponent,
-    ReplaceComma,
-    StarRatingComponent,
     HomeComponent,
-    HotelDetailComponent,
   ],
   imports: [
     BrowserModule,
@@ -34,11 +26,10 @@ registerLocaleData(localeFr,'fr');
     RouterModule.forRoot([
       {path: 'home', component: HomeComponent},
       {path: '', redirectTo: 'home', pathMatch: 'full'},
-      {path: 'hotels/:id', component: HotelDetailComponent, canActivate:[hotelDetailGuard]},
-      {path: 'hotels', component: HotelListComponent},
       {path: '**', redirectTo: 'home', pathMatch: 'full'}
 
-    ])
+    ]),
+    HotelModule
   ],
   providers: [],
   bootstrap: [AppComponent]

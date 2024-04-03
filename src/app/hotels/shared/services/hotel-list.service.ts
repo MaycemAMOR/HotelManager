@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {IHotel} from "./hotel";
+import {IHotel} from "../models/hotel";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {catchError, Observable, tap, throwError} from "rxjs";
 
