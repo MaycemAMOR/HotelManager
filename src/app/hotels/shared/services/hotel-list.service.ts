@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {IHotel} from "../models/hotel";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
-import {catchError, Observable, tap, throwError} from "rxjs";
+import {catchError, map, Observable, tap, throwError} from "rxjs";
 
 @Injectable({
   providedIn : 'root'
@@ -12,6 +12,12 @@ export class HotelListService {
   constructor(private http: HttpClient) {
   }
 
+  public getHotelById(id: number): Observable<IHotel>{
+        // @ts-ignore
+    return this.getHotels().pipe(
+      map(hotels => hotels.find(hotel=>hotel.hotelId==id))
+    );
+  }
   public getHotels() : Observable<IHotel[]>{
     return  this.http.get<IHotel[]>(this.HOTEL_API_URL).pipe(
       tap(hotels => console.log('hotels : ', hotels)),

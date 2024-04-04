@@ -1,5 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {ActivatedRoute} from "@angular/router";
+import {HotelListService} from "../shared/services/hotel-list.service";
+import {IHotel} from "../shared/models/hotel";
 
 @Component({
   selector: 'app-hotel-edit',
@@ -8,7 +11,14 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 })
 export class HotelEditComponent implements OnInit {
   public hotelForm!: FormGroup;
+  public hotel!: IHotel;
 
+  constructor(
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private hotelService: HotelListService
+  ) {
+  }
 
   ngOnInit(): void {
     this.hotelForm = this.fb.group({
@@ -17,16 +27,34 @@ export class HotelEditComponent implements OnInit {
       starRating: [''],
       description: ['']
     });
-
+    this.route.paramMap.subscribe(params => {
+      // @ts-ignore
+      const id = +params.get('id');
+      console.log('id de  hotel à editer : ' + id);
+      this.getSelectedHotel(id);
+    });
   }
 
+  public getSelectedHotel(id: number): void {
+    this.hotelService.getHotelById(id).subscribe((hotel: IHotel) => {
+      console.log(hotel);
+      this.displayHotel(hotel);
+    });
+  }
+public displayHotel(hotel:IHotel): void{
+    this.hotel = hotel;
+    this.hotelForm.patchValue({
+      hotelName: this.hotel.hotelName,
+      hotelPrice: this.hotel.price,
+      starRating: this.hotel.rating,
+      description: this.hotel.description
+    })
+
+}
   public saveHotel(): void {
     console.log(this.hotelForm.value);
 
   }
 
-  constructor(
-    private fb: FormBuilder
-  ) {
-  }
+
 }
