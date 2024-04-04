@@ -4,7 +4,6 @@ import {registerLocaleData} from "@angular/common";
 import {HttpClientModule} from "@angular/common/http";
 import localeFr from "@angular/common/locales/fr";
 import {FormsModule} from "@angular/forms";
-import {RouterModule} from "@angular/router";
 
 import {HotelModule} from './hotels/hotel.module';
 import {AppRoutingModule} from './app-routing.module';
@@ -20,16 +19,10 @@ registerLocaleData(localeFr,'fr');
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    RouterModule.forRoot([
-      {path: 'home', component: HomeComponent},
-      {path: '', redirectTo: 'home', pathMatch: 'full'},
-      {path: '**', redirectTo: 'home', pathMatch: 'full'}
-
-    ]),
-    HotelModule
+    HotelModule,
+    AppRoutingModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
