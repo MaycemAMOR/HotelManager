@@ -3,13 +3,18 @@
       créer un hotel
     </div>
     <div class="card-body">
-      <form>
+      <form novalidate (ngSubmit)="saveHotel()" [formGroup]="hotelForm">
         <div class="form-group row mb-2">
           <label for="hotelNameId" class="col-md-2 col-form-label">
             Nom Hotel
           </label>
           <div class="col-md-8">
-            <input id="hotelNameId" type="text" class="form-control" placeholder="Nom(obligatoire)">
+            <input
+              id="hotelNameId"
+              type="text"
+              class="form-control"
+              formControlName="hotelName"
+              placeholder="Nom(obligatoire)">
           </div>
         </div>
         <div class="form-group row mb-2">
@@ -17,7 +22,12 @@
             Prix
           </label>
           <div class="col-md-8">
-            <input id="hotelPriceId" type="text" class="form-control" placeholder="Prix(obligatoire)">
+            <input
+              id="hotelPriceId"
+              type="text"
+              class="form-control"
+              formControlName="hotelPrice"
+              placeholder="Prix(obligatoire)">
           </div>
         </div>
         <div class="form-group row mb-2">
@@ -25,15 +35,24 @@
             Évaluation  (1-5)
           </label>
           <div class="col-md-8">
-            <input id="starRatingId" type="text" class="form-control" placeholder="Évaluation  (1-5)">
+            <input
+              id="starRatingId"
+              type="text"
+              class="form-control"
+              formControlName="starRating"
+              placeholder="Évaluation  (1-5)">
           </div>
         </div>
         <div class="form-group row mb-2">
-          <label for="description" class="col-md-2 col-form-label">
+          <label for="descriptionId" class="col-md-2 col-form-label">
             Description
           </label>
           <div class="col-md-8">
-            <textarea class="form-control" id="description"></textarea>
+            <textarea
+              class="form-control"
+              id="descriptionId"
+              formControlName="description"
+            ></textarea>
           </div>
         </div>
         <div class="form-group row mb-2">
@@ -41,7 +60,7 @@
             <button class="btn btn-info mr-3" type="submit">
               Sauvgarder
             </button>
-            <button class="btn btn-outline-secondary mr-3" type="button">
+            <button class="btn btn-outline-secondary mr-3" type="button" [routerLink]="['/hotels']">
               Annuler
             </button>
             <button class="btn btn-outline-danger" type="button">
@@ -55,3 +74,6 @@
       </form>
     </div>
   </div>
+<pre>
+  {{hotelForm?.value | json}}
+</pre>
