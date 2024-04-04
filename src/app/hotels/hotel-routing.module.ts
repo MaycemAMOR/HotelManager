@@ -5,6 +5,7 @@ import {HotelDetailComponent} from "./hotel-detail/hotel-detail.component";
 import {hotelDetailGuard} from "./shared/guards/hotel-detail.guard";
 import {HotelListComponent} from "./hotel-list/hotel-list.component";
 import {HotelEditComponent} from "./hotel-edit/hotel-edit.component";
+import {hotelEditGuard} from "./shared/guards/hotel-edit.guard";
 
 
 @NgModule({
@@ -13,7 +14,7 @@ import {HotelEditComponent} from "./hotel-edit/hotel-edit.component";
     RouterModule.forChild([
       {path: 'hotels/:id', component: HotelDetailComponent, canActivate: [hotelDetailGuard]},
       {path: 'hotels', component: HotelListComponent},
-      {path:'hotels/:id/edit', component: HotelEditComponent}
+      {path:'hotels/:id/edit', component: HotelEditComponent, canDeactivate:[hotelEditGuard]}
     ]),
   ],
   exports:[RouterModule]
