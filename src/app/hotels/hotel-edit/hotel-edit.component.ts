@@ -12,6 +12,7 @@ import {IHotel} from "../shared/models/hotel";
 export class HotelEditComponent implements OnInit {
   public hotelForm!: FormGroup;
   public hotel!: IHotel;
+  public pageTitle!: string;
 
   constructor(
     private fb: FormBuilder,
@@ -41,8 +42,14 @@ export class HotelEditComponent implements OnInit {
       this.displayHotel(hotel);
     });
   }
-public displayHotel(hotel:IHotel): void{
+
+  public displayHotel(hotel: IHotel): void {
     this.hotel = hotel;
+    if(this.hotel.hotelId == 0){
+      this.pageTitle= "Création d'un hotel";
+    }else{
+      this.pageTitle= `Edition de l\'hotel ${this.hotel.hotelName}`;
+    }
     this.hotelForm.patchValue({
       hotelName: this.hotel.hotelName,
       hotelPrice: this.hotel.price,
@@ -50,11 +57,10 @@ public displayHotel(hotel:IHotel): void{
       description: this.hotel.description
     })
 
-}
-  public saveHotel(): void {
-    console.log(this.hotelForm.value);
-
   }
 
+  public saveHotel(): void {
+    console.log(this.hotelForm.value);
+  }
 
 }

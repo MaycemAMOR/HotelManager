@@ -1,25 +1,41 @@
 import {Injectable} from "@angular/core";
 import {IHotel} from "../models/hotel";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
-import {catchError, map, Observable, tap, throwError} from "rxjs";
+import {catchError, map, Observable, of, tap, throwError} from "rxjs";
 
 @Injectable({
-  providedIn : 'root'
+  providedIn: 'root'
 })
 export class HotelListService {
 
   private readonly HOTEL_API_URL = 'api/hotels.json';
+
   constructor(private http: HttpClient) {
   }
 
-  public getHotelById(id: number): Observable<IHotel>{
-        // @ts-ignore
+  public getHotelById(id: number): Observable<IHotel> {
+    if (id == 0) {
+      return of(this.getDefaultHotel());
+    }
+    // @ts-ignore
     return this.getHotels().pipe(
-      map(hotels => hotels.find(hotel=>hotel.hotelId==id))
+      map(hotels => hotels.find(hotel => hotel.hotelId == id))
     );
   }
-  public getHotels() : Observable<IHotel[]>{
-    return  this.http.get<IHotel[]>(this.HOTEL_API_URL).pipe(
+
+  private getDefaultHotel(): IHotel {
+    return {
+      hotelId: 0,
+      hotelName: '',
+      description: '',
+      price: 0,
+      imageUrl: '',
+      rating: 0,
+    };
+  }
+
+  public getHotels(): Observable<IHotel[]> {
+    return this.http.get<IHotel[]>(this.HOTEL_API_URL).pipe(
       tap(hotels => console.log('hotels : ', hotels)),
       catchError(this.handleError)
     );
@@ -77,7 +93,6 @@ export class HotelListService {
       }
     ];
   }*/
-
 
 
 }

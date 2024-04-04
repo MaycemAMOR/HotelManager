@@ -1,6 +1,6 @@
 <div class="card">
     <div class="card-header text-white bg-info">
-      créer un hotel
+      {{ pageTitle }}
     </div>
     <div class="card-body">
       <form novalidate (ngSubmit)="saveHotel()" [formGroup]="hotelForm">
@@ -74,6 +74,6 @@
       </form>
     </div>
   </div>
-<pre>
+<!--<pre>
   {{hotelForm?.value | json}}
-</pre>
+</pre>-->
