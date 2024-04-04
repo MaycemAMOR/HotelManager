@@ -14,10 +14,10 @@ import {hotelEditGuard} from "./shared/guards/hotel-edit.guard";
     RouterModule.forChild([
       {path: 'hotels/:id', component: HotelDetailComponent, canActivate: [hotelDetailGuard]},
       {path: 'hotels', component: HotelListComponent},
-      {path:'hotels/:id/edit', component: HotelEditComponent, canDeactivate:[hotelEditGuard]}
+      {path: 'hotels/:id/edit', component: HotelEditComponent, canDeactivate: [hotelEditGuard]}
     ]),
   ],
-  exports:[RouterModule]
+  exports: [RouterModule]
 })
 export class HotelRoutingModule {
 }
