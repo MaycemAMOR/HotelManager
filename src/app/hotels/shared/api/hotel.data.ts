@@ -38,4 +38,10 @@ export class HotelData implements InMemoryDbService {
     return {hotels};
   }
 
+
+// pas besoin d'implimenté cette methode avec la nouvelle vesion 17 d'angular
+  /*  genId(hotels: IHotel[]):number{
+     // @ts-ignore
+      return hotels.length> 0 ? Math.max(...hotels.map(hotel=> hotel.id)) + 1 : 1
+   }*/
 }

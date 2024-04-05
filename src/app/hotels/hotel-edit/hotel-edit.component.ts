@@ -25,8 +25,8 @@ export class HotelEditComponent implements OnInit {
   ngOnInit(): void {
     this.hotelForm = this.fb.group({
       hotelName: ['', Validators.required],
-      hotelPrice: ['', Validators.required],
-      starRating: [''],
+      price: ['', Validators.required],
+      rating: [''],
       description: ['']
     });
     this.route.paramMap.subscribe(params => {
@@ -48,15 +48,22 @@ export class HotelEditComponent implements OnInit {
     this.hotel = hotel;
     if (this.hotel.id == 0) {
       this.pageTitle = "Création d'un hotel";
+      this.hotelForm.patchValue({
+        hotelName: '',
+        price: '',
+        rating: '',
+        description: ''
+      })
     } else {
       this.pageTitle = `Edition de l\'hotel ${this.hotel.hotelName}`;
+      this.hotelForm.patchValue({
+        hotelName: this.hotel.hotelName,
+        price: this.hotel.price,
+        rating: this.hotel.rating,
+        description: this.hotel.description
+      })
     }
-    this.hotelForm.patchValue({
-      hotelName: this.hotel.hotelName,
-      hotelPrice: this.hotel.price,
-      starRating: this.hotel.rating,
-      description: this.hotel.description
-    })
+
 
   }
 
@@ -68,7 +75,9 @@ export class HotelEditComponent implements OnInit {
           ...this.hotelForm.value
         };
         if (hotel.id == 0) { // tester si on est entrain de créer un nouveau hotel ou mettre à jour un hotel existant
-          //
+          this.hotelService.createHotel(hotel).subscribe({
+            next: () => this.saveCompleted()
+          });
         } else {
           this.hotelService.updateHotel(hotel).subscribe({
             next: () => this.saveCompleted()
