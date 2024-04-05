@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {catchError, map, Observable, of, tap, throwError} from "rxjs";
+import {catchError, Observable, of, tap, throwError} from "rxjs";
 
 import {IHotel} from "../models/hotel";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
@@ -15,19 +15,28 @@ export class HotelListService {
   constructor(private http: HttpClient) {
   }
 
+  public getHotels(): Observable<IHotel[]> {
+    const url = `${this.HOTEL_API_URL}`;
+    return this.http.get<IHotel[]>(url).pipe(
+      tap(hotels => console.log('hotels : ', hotels)),
+      catchError(this.handleError)
+    );
+  }
+
   public getHotelById(id: number): Observable<IHotel> {
+    const url = `${this.HOTEL_API_URL}/${id}`;
     if (id == 0) {
       return of(this.getDefaultHotel());
     }
     // @ts-ignore
-    return this.getHotels().pipe(
-      map(hotels => hotels.find(hotel => hotel.id == id))
+    return this.http.get<IHotel>(url).pipe(
+      catchError(this.handleError)
     );
   }
 
-  public getHotels(): Observable<IHotel[]> {
-    return this.http.get<IHotel[]>(this.HOTEL_API_URL).pipe(
-      tap(hotels => console.log('hotels : ', hotels)),
+  public updateHotel(hotel: IHotel): Observable<IHotel> {
+    const url = `${this.HOTEL_API_URL}/${hotel.id}`;
+    return this.http.put<IHotel>(url, hotel).pipe(
       catchError(this.handleError)
     );
   }

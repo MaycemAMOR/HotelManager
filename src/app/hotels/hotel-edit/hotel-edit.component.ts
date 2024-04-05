@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {HotelListService} from "../shared/services/hotel-list.service";
 import {IHotel} from "../shared/models/hotel";
 
@@ -17,7 +17,8 @@ export class HotelEditComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
-    private hotelService: HotelListService
+    private hotelService: HotelListService,
+    private router: Router
   ) {
   }
 
@@ -60,7 +61,29 @@ export class HotelEditComponent implements OnInit {
   }
 
   public saveHotel(): void {
+    if (this.hotelForm.valid) { // si mon formulaire est valid
+      if (this.hotelForm.dirty) { //si au min il y a un element dans mon formulaire
+        const hotel: IHotel = { // remplacer les valeur qui sont dans notre formulaire dans l'objet hotel créé deja dans la fonction displayHotel
+          ...this.hotel,
+          ...this.hotelForm.value
+        };
+        if (hotel.id == 0) { // tester si on est entrain de créer un nouveau hotel ou mettre à jour un hotel existant
+          //
+        } else {
+          this.hotelService.updateHotel(hotel).subscribe({
+            next: () => this.saveCompleted()
+          });
+
+        }
+      }
+    }
+
     console.log(this.hotelForm.value);
   }
 
+  public saveCompleted() {
+    this.hotelForm.reset();
+    this.router.navigate(['/hotels']);
+
+  }
 }
