@@ -1,7 +1,7 @@
 <div class="container">
   <h2 *ngIf="hotels && hotels.length >0">{{ title }}</h2>
 
-  <button class="btn btn-primary d-flex" (click)="toggleIsNewBadge()">
+  <button (click)="toggleIsNewBadge()" class="btn btn-primary d-flex">
     <span class="material-icons">
       {{ showBadge ? 'visibility' : 'visibility_off' }}
     </span>
@@ -20,19 +20,19 @@
       </div>
       <div class="col-md-8 form-group">
         <!--     <input type="text" class="form-control" [ngModel]="hotelFilter" (ngModelChange)="hotelFilter = $event">-->
-        <input type="text" class="form-control" [(ngModel)]="hotelFilter">
+        <input [(ngModel)]="hotelFilter" class="form-control" type="text">
       </div>
     </div>
   </div>
-<div class="alert alert-primary" *ngIf="!!receivedRating">
-  {{receivedRating}}
-</div>
+  <div *ngIf="!!receivedRating" class="alert alert-primary">
+    {{ receivedRating }}
+  </div>
   <div class="row row-cols-1 row-cols-md-3">
-    <div class="card" style="width: 18rem;" *ngFor=" let hotel of filteredHotel">
-      <img class="card-img-top"
+    <div *ngFor=" let hotel of filteredHotel" class="card" style="width: 18rem;">
+      <img [alt]="hotel.hotelName"
            [src]="hotel.imageUrl"
            [title]="hotel.hotelName | uppercase"
-           [alt]="hotel.hotelName">
+           class="card-img-top">
       <div class="card-body">
         <h5 class="card-title">{{ hotel.hotelName | titlecase }}</h5>
         <p class="card-text">{{ hotel.description }}</p>
@@ -42,24 +42,24 @@
 
         <div class="d-flex justify-content-between align-items-baseline">
           <app-star-rating
-            [rating]="hotel.rating"
             (starRatingCliked)="receivedRatingCliked($event)"
+            [rating]="hotel.rating"
           ></app-star-rating>
           <span
-            class="material-icons bg-primary text-white p-2 rounded-circle btn"
-            [routerLink]="['/hotels',hotel.hotelId,'edit']">
+            [routerLink]="['/hotels',hotel.id,'edit']"
+            class="material-icons bg-primary text-white p-2 rounded-circle btn">
             edit
           </span>
           <span
-            class="material-icons bg-info text-white p-2 rounded-circle btn"
-            [routerLink]="['/hotels',hotel.hotelId]">
+            [routerLink]="['/hotels',hotel.id]"
+            class="material-icons bg-info text-white p-2 rounded-circle btn">
             keyboard_arrow_right
           </span>
         </div>
-<!--
-        <app-star-rating [rating]="hotel.rating" (starRatingCliked)="receivedRatingCliked($event)"> </app-star-rating>
--->
-        <span class=" badge text-bg-info" *ngIf="showBadge">Nouveau</span>
+        <!--
+                <app-star-rating [rating]="hotel.rating" (starRatingCliked)="receivedRatingCliked($event)"> </app-star-rating>
+        -->
+        <span *ngIf="showBadge" class=" badge text-bg-info">Nouveau</span>
       </div>
     </div>
   </div>

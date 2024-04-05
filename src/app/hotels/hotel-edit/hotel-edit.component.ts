@@ -45,10 +45,10 @@ export class HotelEditComponent implements OnInit {
 
   public displayHotel(hotel: IHotel): void {
     this.hotel = hotel;
-    if(this.hotel.hotelId == 0){
-      this.pageTitle= "Création d'un hotel";
-    }else{
-      this.pageTitle= `Edition de l\'hotel ${this.hotel.hotelName}`;
+    if (this.hotel.id == 0) {
+      this.pageTitle = "Création d'un hotel";
+    } else {
+      this.pageTitle = `Edition de l\'hotel ${this.hotel.hotelName}`;
     }
     this.hotelForm.patchValue({
       hotelName: this.hotel.hotelName,
