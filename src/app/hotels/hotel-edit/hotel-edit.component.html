@@ -60,10 +60,18 @@
           <button class="btn btn-info mr-3" type="submit">
             Sauvgarder
           </button>
-          <button [routerLink]="['/hotels']" class="btn btn-outline-secondary mr-3" type="button">
+          <button
+            [routerLink]="['/hotels']"
+            class="btn btn-outline-secondary mr-3"
+            type="button">
             Annuler
           </button>
-          <button class="btn btn-outline-danger" type="button">
+          <button
+            (click)="deletHotel()"
+            [disabled]="hotel.id==0"
+            class="btn btn-outline-danger"
+            type="button"
+          >
             Supprimer
           </button>
 

@@ -82,12 +82,19 @@ export class HotelEditComponent implements OnInit {
           this.hotelService.updateHotel(hotel).subscribe({
             next: () => this.saveCompleted()
           });
-
         }
       }
     }
 
     console.log(this.hotelForm.value);
+  }
+
+  public deletHotel(): void {
+    if (confirm(`Voulez vous réelement supprimer ${this.hotel.hotelName} ?`)) {
+      this.hotelService.deleteHotel(<number>this.hotel.id).subscribe({
+        next: () => this.saveCompleted()
+      })
+    }
   }
 
   public saveCompleted() {
