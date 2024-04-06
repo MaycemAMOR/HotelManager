@@ -1,3 +1,10 @@
+<ng-container *ngIf="errorMessage">
+  <div class="alert alert-danger d-flex align-items-center">
+    <span class="material-icons ms-2">error</span>
+    {{ errorMessage }}
+    <span (click)="hideError()" class="material-icons ms-auto">close</span>
+  </div>
+</ng-container>
 <div class="card">
   <div class="card-header text-white bg-info">
     {{ pageTitle }}

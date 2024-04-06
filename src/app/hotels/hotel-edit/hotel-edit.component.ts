@@ -14,6 +14,7 @@ export class HotelEditComponent implements OnInit {
   public hotelForm!: FormGroup;
   public hotel!: IHotel;
   public pageTitle!: string;
+  public errorMessage!: String | null;
 
   constructor(
     private fb: FormBuilder,
@@ -41,6 +42,10 @@ export class HotelEditComponent implements OnInit {
       console.log('id de  hotel à editer : ' + id);
       this.getSelectedHotel(id);
     });
+  }
+
+  public hideError(): void {
+    this.errorMessage = null;
   }
 
   public addTags(): void {
@@ -92,11 +97,13 @@ export class HotelEditComponent implements OnInit {
         };
         if (hotel.id == 0) { // tester si on est entrain de créer un nouveau hotel ou mettre à jour un hotel existant
           this.hotelService.createHotel(hotel).subscribe({
-            next: () => this.saveCompleted()
+            next: () => this.saveCompleted(),
+            error: (err) => this.errorMessage = err
           });
         } else {
           this.hotelService.updateHotel(hotel).subscribe({
-            next: () => this.saveCompleted()
+            next: () => this.saveCompleted(),
+            error: (err) => this.errorMessage = err
           });
         }
       }
