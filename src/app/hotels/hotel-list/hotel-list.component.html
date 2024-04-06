@@ -56,10 +56,13 @@
             keyboard_arrow_right
           </span>
         </div>
-        <!--
-                <app-star-rating [rating]="hotel.rating" (starRatingCliked)="receivedRatingCliked($event)"> </app-star-rating>
-        -->
-        <span *ngIf="showBadge" class=" badge text-bg-info">Nouveau</span>
+        <ng-container *ngFor="let tag of hotel.tags let i=index">
+          <ng-container *ngIf="showBadge">
+            <span
+              [ngClass]=" i%2 === 0 ? 'badge text-bg-info' : 'badge text-bg-success ms-2 me-2' "
+            >{{ tag }}</span>
+          </ng-container>
+        </ng-container>
       </div>
     </div>
   </div>

@@ -67,17 +67,18 @@ export class HotelEditComponent implements OnInit {
         hotelName: '',
         price: '',
         rating: '',
-        description: ''
-      })
+        description: '',
+      });
     } else {
       this.pageTitle = `Edition de l\'hotel ${this.hotel.hotelName}`;
       this.hotelForm.patchValue({
         hotelName: this.hotel.hotelName,
         price: this.hotel.price,
         rating: this.hotel.rating,
-        description: this.hotel.description
-      })
+        description: this.hotel.description,
+      });
     }
+    this.hotelForm.setControl('tags', this.fb.array(this.hotel.tags || []))
 
 
   }

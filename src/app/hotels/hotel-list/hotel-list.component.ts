@@ -8,8 +8,11 @@ import {HotelListService} from "../shared/services/hotel-list.service";
   styleUrls: ['./hotel-list.component.css']
 })
 export class HotelListComponent implements OnInit {
-  protected title: string = "Liste  Hotels";
   public hotels: IHotel[] = [];
+  public showBadge: boolean = true;
+  public filteredHotel: IHotel[] = [];
+  public receivedRating: string | undefined;
+  protected title: string = "Liste  Hotels";
   private _hotelListService: HotelListService;
   private errorMsg: string | undefined;
 
@@ -17,10 +20,16 @@ export class HotelListComponent implements OnInit {
     this._hotelListService = hotelListService;
   }
 
-  public showBadge: boolean | undefined;
   private _hotelFilter = 'mot';
-  public filteredHotel: IHotel[] = [];
-  public receivedRating: string | undefined;
+
+  public get hotelFilter(): string {
+    return this._hotelFilter;
+  }
+
+  public set hotelFilter(value: string) {
+    this._hotelFilter = value;
+    this.filteredHotel = this.hotelFilter ? this.filterHotels(this.hotelFilter) : this.hotels;
+  }
 
   public receivedRatingCliked(message: string): void {
     this.receivedRating = message;
@@ -33,22 +42,12 @@ export class HotelListComponent implements OnInit {
   ngOnInit(): void {
     this.hotelFilter = '';
     this._hotelListService.getHotels().subscribe({
-      next : hotels =>{
+      next: hotels => {
         this.hotels = hotels;
         this.filteredHotel = this.hotels;
       },
-      error : err => this.errorMsg = err
+      error: err => this.errorMsg = err
     });
-  }
-
-
-  public get hotelFilter(): string {
-    return this._hotelFilter;
-  }
-
-  public set hotelFilter(value: string) {
-    this._hotelFilter = value;
-    this.filteredHotel = this.hotelFilter ? this.filterHotels(this.hotelFilter) : this.hotels;
   }
 
   private filterHotels(criteria: string): IHotel[] {

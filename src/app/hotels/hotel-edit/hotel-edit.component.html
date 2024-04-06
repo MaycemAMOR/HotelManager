@@ -61,7 +61,7 @@
           </div>
           <div class="row">
             <div class="col-md-2 mb-2">
-              <button (click)="addTags()" class="btn btn-outline-primary btn-sm">
+              <button (click)="addTags()" class="btn btn-outline-primary btn-sm" type="button">
                 Ajouter une étiquette
               </button>
             </div>
@@ -93,7 +93,7 @@
           </button>
           <button
             (click)="deletHotel()"
-            [disabled]="hotel.id==0"
+            [disabled]="hotel?.id==0"
             class="btn btn-outline-danger"
             type="button"
           >
@@ -107,5 +107,5 @@
   </div>
 </div>
 <pre>
-  {{ hotelForm?.value | json }}
+  {{ hotelForm.value | json }}
 </pre>
