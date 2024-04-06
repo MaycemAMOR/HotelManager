@@ -42,6 +42,31 @@
             placeholder="Évaluation  (1-5)"
             type="text">
         </div>
+        <div formArrayName="tags">
+          <div *ngFor="let tag of tags.controls; let i=index" class="form-group row mb-2">
+            <label [attr.for]="i" class="col-md-2 col-form-label">
+              {{ 'Etiquette ' + i }}
+            </label>
+            <div class="col-md-8">
+              <input
+                [formControlName]="i"
+                [id]="i"
+                class="form-control"
+                placeholder="{{'Etiquette ' + i }}"
+                type="text">
+            </div>
+            <button (click)="deleteTags(i)" class="col-md-2 btn btn-outline-danger btn-sm">
+              Supprimer
+            </button>
+          </div>
+          <div class="row">
+            <div class="col-md-2 mb-2">
+              <button (click)="addTags()" class="btn btn-outline-primary btn-sm">
+                Ajouter une étiquette
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="form-group row mb-2">
         <label class="col-md-2 col-form-label" for="descriptionId">
@@ -74,7 +99,6 @@
           >
             Supprimer
           </button>
-
         </div>
       </div>
 
@@ -82,6 +106,6 @@
     </form>
   </div>
 </div>
-<!--<pre>
-  {{hotelForm?.value | json}}
-</pre>-->
+<pre>
+  {{ hotelForm?.value | json }}
+</pre>
