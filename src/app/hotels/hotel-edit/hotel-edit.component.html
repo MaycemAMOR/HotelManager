@@ -36,11 +36,15 @@
         </label>
         <div class="col-md-8">
           <input
+            [ngClass]="{'is-invalid' : formErrors['price']}"
             class="form-control"
             formControlName="price"
             id="hotelPriceId"
             placeholder="Prix(obligatoire)"
             type="text">
+          <span class="invalid-feedback">
+            {{ formErrors['price'] }}
+          </span>
         </div>
       </div>
       <div class="form-group row mb-2">

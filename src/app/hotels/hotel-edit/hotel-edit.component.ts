@@ -1,10 +1,11 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
-import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChildren} from '@angular/core';
+import {FormArray, FormBuilder, FormControl, FormControlName, FormGroup, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 
 import {HotelListService} from "../shared/services/hotel-list.service";
 import {IHotel} from "../shared/models/hotel";
 import {GlobalGenericValidator} from "../shared/validators/global-generic.validator";
+import {fromEvent, merge, Observable} from "rxjs";
 
 @Component({
   selector: 'app-hotel-edit',
@@ -12,6 +13,7 @@ import {GlobalGenericValidator} from "../shared/validators/global-generic.valida
   styleUrl: './hotel-edit.component.css'
 })
 export class HotelEditComponent implements OnInit, AfterViewInit {
+  @ViewChildren(FormControlName, {read: ElementRef}) inputElements!: ElementRef[];
   public hotelForm!: FormGroup;
   public hotel!: IHotel;
   public pageTitle!: string;
@@ -60,7 +62,13 @@ export class HotelEditComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.formErrors = this.globalGenericValidator.createErrorMessage(this.hotelForm);
+    const formControlBlurs: Observable<unknown>[] = this.inputElements
+      .map((formControlElementRef: ElementRef) => fromEvent(formControlElementRef.nativeElement, 'blur'));
+    merge(this.hotelForm.valueChanges, ...formControlBlurs) // merger deux observables
+      .subscribe(() => {
+        this.formErrors = this.globalGenericValidator.createErrorMessage(this.hotelForm);
+        console.log('formulaire erros :', this.formErrors);
+      })
   }
 
   public hideError(): void {
