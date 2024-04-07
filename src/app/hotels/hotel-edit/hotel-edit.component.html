@@ -53,11 +53,15 @@
         </label>
         <div class="col-md-8">
           <input
+            [ngClass]="{'is-invalid' : formErrors['rating']}"
             class="form-control"
             formControlName="rating"
             id="starRatingId"
             placeholder="Évaluation  (1-5)"
             type="text">
+          <span class="invalid-feedback">
+            {{ formErrors['rating'] }}
+          </span>
         </div>
         <div formArrayName="tags">
           <div *ngFor="let tag of tags.controls; let i=index" class="form-group row mb-2">
@@ -68,9 +72,13 @@
               <input
                 [formControlName]="i"
                 [id]="i"
+                [ngClass]="{'is-invalid' : formErrors['tags']}"
                 class="form-control"
                 placeholder="{{'Etiquette ' + i }}"
                 type="text">
+              <span class="invalid-feedback">
+            {{ formErrors['tags'] }}
+          </span>
             </div>
             <button (click)="deleteTags(i)" class="col-md-2 btn btn-outline-danger btn-sm">
               Supprimer

@@ -6,6 +6,7 @@ import {debounce, fromEvent, merge, Observable, timer} from "rxjs";
 import {HotelListService} from "../shared/services/hotel-list.service";
 import {IHotel} from "../shared/models/hotel";
 import {GlobalGenericValidator} from "../shared/validators/global-generic.validator";
+import {NumberValidators} from "../shared/validators/number.validator";
 
 
 @Component({
@@ -26,7 +27,12 @@ export class HotelEditComponent implements OnInit, AfterViewInit {
       minlength: 'Le nom de l\'hotel  doit comporter au moin 4 caractéres ',
     },
     price: {
-      required: 'Le prix de l\'hotel est obligatoire'
+      required: 'Le prix de l\'hotel est obligatoire',
+      pattern: 'Le prix de l\'hotel doit être un nombre'
+    },
+    rating: {
+      range: 'Donnez une note entre 1 et 5',
+      // pattern: 'Le prix de l\'hotel doit être un nombre'
     }
   };
 
@@ -50,8 +56,9 @@ export class HotelEditComponent implements OnInit, AfterViewInit {
 
     this.hotelForm = this.fb.group({
       hotelName: ['', [Validators.required, Validators.minLength(4)]],
-      price: ['', Validators.required],
-      rating: [''],
+      price: ['',
+        [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
+      rating: ['', NumberValidators.range(1, 5)],
       description: [''],
       tags: this.fb.array([])
     });
