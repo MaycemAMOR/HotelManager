@@ -110,7 +110,7 @@
           </button>
           <button
             (click)="deletHotel()"
-            [disabled]="hotel?.id==0"
+            [disabled]="hotel.id!==0"
             class="btn btn-outline-danger"
             type="button"
           >

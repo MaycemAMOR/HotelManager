@@ -1,11 +1,12 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChildren} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, FormControlName, FormGroup, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
+import {debounce, fromEvent, merge, Observable, timer} from "rxjs";
 
 import {HotelListService} from "../shared/services/hotel-list.service";
 import {IHotel} from "../shared/models/hotel";
 import {GlobalGenericValidator} from "../shared/validators/global-generic.validator";
-import {fromEvent, merge, Observable} from "rxjs";
+
 
 @Component({
   selector: 'app-hotel-edit',
@@ -21,7 +22,8 @@ export class HotelEditComponent implements OnInit, AfterViewInit {
   public formErrors: { [key: string]: string } = {};
   public validationMessage: { [key: string]: { [key: string]: string } } = {
     hotelName: {
-      required: 'Le nom de l\'hotel est obligatoire'
+      required: 'Le nom de l\'hotel est obligatoire',
+      minlength: 'Le nom de l\'hotel  doit comporter au moin 4 caractéres ',
     },
     price: {
       required: 'Le prix de l\'hotel est obligatoire'
@@ -29,6 +31,7 @@ export class HotelEditComponent implements OnInit, AfterViewInit {
   };
 
   private globalGenericValidator!: GlobalGenericValidator;
+  private isFomSubmitted!: boolean;
 
   constructor(
     private fb: FormBuilder,
@@ -46,7 +49,7 @@ export class HotelEditComponent implements OnInit, AfterViewInit {
     this.globalGenericValidator = new GlobalGenericValidator(this.validationMessage);
 
     this.hotelForm = this.fb.group({
-      hotelName: ['', Validators.required],
+      hotelName: ['', [Validators.required, Validators.minLength(4)]],
       price: ['', Validators.required],
       rating: [''],
       description: [''],
@@ -62,11 +65,22 @@ export class HotelEditComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    console.log('isFomSubmitted', this.isFomSubmitted);
     const formControlBlurs: Observable<unknown>[] = this.inputElements
       .map((formControlElementRef: ElementRef) => fromEvent(formControlElementRef.nativeElement, 'blur'));
     merge(this.hotelForm.valueChanges, ...formControlBlurs) // merger deux observables
+      .pipe(
+        //debounceTime(800) // ==> pour eviter une la tence entre l'apparution de l'erreur globle
+        // et ceux de chaque input dans le cas de sauvgard d'un formulaire vide pour cela
+        // j'utlise la ligne suivante pour tester isFomSubmitted est true si oui les erreurs
+        // de chaque input vont etre verifier et emis immidiatement si isFomSubmitted est false
+        // c'est a dire dans ce cas que l'utilisateur est entrain de remplir le formulaire
+        // alors  timer vas diffiser un observable de 800 milli secondes
+
+        debounce(() => this.isFomSubmitted ? timer(0) : timer(800)),
+      )
       .subscribe(() => {
-        this.formErrors = this.globalGenericValidator.createErrorMessage(this.hotelForm);
+        this.formErrors = this.globalGenericValidator.createErrorMessage(this.hotelForm, this.isFomSubmitted);
         console.log('formulaire erros :', this.formErrors);
       })
   }
@@ -116,13 +130,20 @@ export class HotelEditComponent implements OnInit, AfterViewInit {
   }
 
   public saveHotel(): void {
+    this.isFomSubmitted = true;
+    this.hotelForm.updateValueAndValidity({
+      onlySelf: true, // ==> pour mettre à jour le crontrols : tester la valeur de chaque input
+      emitEvent: true// ==> pour provoque  et emettre l'evenenment du changement de statut et du
+      // changement de valeur de chaque input afin que le validator puisse entrer
+      // en jeux  dans le cas d'un submit avec un formulaire vide .
+    })
     if (this.hotelForm.valid) { // si mon formulaire est valid
       if (this.hotelForm.dirty) { //si au min il y a un element dans mon formulaire
         const hotel: IHotel = { // remplacer les valeur qui sont dans notre formulaire dans l'objet hotel créé deja dans la fonction displayHotel
           ...this.hotel,
           ...this.hotelForm.value
         };
-        if (hotel.id == 0) { // tester si on est entrain de créer un nouveau hotel ou mettre à jour un hotel existant
+        if (hotel.id === 0) { // tester si on est entrain de créer un nouveau hotel ou mettre à jour un hotel existant
           this.hotelService.createHotel(hotel).subscribe({
             next: () => this.saveCompleted(),
             error: (err) => this.errorMessage = err
@@ -133,7 +154,13 @@ export class HotelEditComponent implements OnInit, AfterViewInit {
             error: (err) => this.errorMessage = err
           });
         }
+      } else {
+        this.saveCompleted();
       }
+    } else {
+      this.errorMessage = 'Corrigez les erreus s\'il vous plait';
+      console.log('isFomSubmitted', this.isFomSubmitted);
+
     }
 
     console.log(this.hotelForm.value);
@@ -152,6 +179,4 @@ export class HotelEditComponent implements OnInit, AfterViewInit {
     this.router.navigate(['/hotels']);
 
   }
-
-
 }
