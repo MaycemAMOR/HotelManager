@@ -1,28 +1,32 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 
 import {HotelListService} from "../shared/services/hotel-list.service";
 import {IHotel} from "../shared/models/hotel";
+import {GlobalGenericValidator} from "../shared/validators/global-generic.validator";
 
 @Component({
   selector: 'app-hotel-edit',
   templateUrl: './hotel-edit.component.html',
   styleUrl: './hotel-edit.component.css'
 })
-export class HotelEditComponent implements OnInit {
+export class HotelEditComponent implements OnInit, AfterViewInit {
   public hotelForm!: FormGroup;
   public hotel!: IHotel;
   public pageTitle!: string;
   public errorMessage!: String | null;
-  public validationMessage : { [key: string]: { [key: string] : string} } = {
+  public formErrors: { [key: string]: string } = {};
+  public validationMessage: { [key: string]: { [key: string]: string } } = {
     hotelName: {
       required: 'Le nom de l\'hotel est obligatoire'
     },
-    price:{
-      required : 'Le prix de l\'hotel est obligatoire'
+    price: {
+      required: 'Le prix de l\'hotel est obligatoire'
     }
   };
+
+  private globalGenericValidator!: GlobalGenericValidator;
 
   constructor(
     private fb: FormBuilder,
@@ -37,6 +41,8 @@ export class HotelEditComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.globalGenericValidator = new GlobalGenericValidator(this.validationMessage);
+
     this.hotelForm = this.fb.group({
       hotelName: ['', Validators.required],
       price: ['', Validators.required],
@@ -44,12 +50,17 @@ export class HotelEditComponent implements OnInit {
       description: [''],
       tags: this.fb.array([])
     });
+
     this.route.paramMap.subscribe(params => {
       // @ts-ignore
       const id = +params.get('id');
       console.log('id de  hotel à editer : ' + id);
       this.getSelectedHotel(id);
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.formErrors = this.globalGenericValidator.createErrorMessage(this.hotelForm);
   }
 
   public hideError(): void {
@@ -133,4 +144,6 @@ export class HotelEditComponent implements OnInit {
     this.router.navigate(['/hotels']);
 
   }
+
+
 }
